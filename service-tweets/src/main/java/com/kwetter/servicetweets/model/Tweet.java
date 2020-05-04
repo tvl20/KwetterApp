@@ -5,37 +5,28 @@ import java.util.Date;
 public class Tweet {
     private Date postDate;
     private String message;
-    private int posterID;
+    private BasicUser poster;
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Date getPostDate() {
+    public Date getPostDate()
+    {
         return postDate;
     }
 
-    public void setPostDate(Date postDate) {
-        this.postDate = postDate;
+    public String getMessage()
+    {
+        return message;
     }
 
-    public int getPosterID() {
-        return posterID;
-    }
-
-    public void setPosterID(int posterID) {
-        this.posterID = posterID;
+    public BasicUser getPoster()
+    {
+        return poster;
     }
 
     public Tweet() {}
 
-    public Tweet(Date postDate, String message, int posterID) {
+    public Tweet(Date postDate, String message, BasicUser poster) {
         this.postDate = postDate;
         this.message = message;
-        this.posterID = posterID;
+        this.poster = poster;
     }
 }

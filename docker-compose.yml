@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+  message-broker:
+    image: rabbitmq:3.8-management
+    hostname: message-broker
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  service-tweets: # <--- this is the name of the service and should be unique.
+    image: service-tweets:latest # <--- this is the image of which the service will be based upon.
+    hostname: service-tweets # <--- this will be the hostname it will be known as.
+#    restart: always # <--- if it fails, always restart.
+    ports:
+      - 8081:8080 # <-- bind the host port 8081 to whatever is running in the container on 8080.
+
+#  service-users: # <--- this is the name of the service and should be unique.
+#    image: service-users:latest # <--- this is the image of which the service will be based upon.
+#    hostname: service-users # <--- this will be the hostname it will be known as.
+#    restart: always # <--- if it fails, always restart.
+#    ports:
+#      - 8082:8080 # <-- bind the host port 8082 to whatever is running in the container on 8080.
