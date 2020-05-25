@@ -13,33 +13,32 @@ import org.springframework.stereotype.Component;
 @Component
 public class EventReceiver
 {
-//	@Autowired
-//	private TweetDataConnection tweetRepository;
-//
-//	private Logger log = LoggerFactory.getLogger(EventReceiver.class);
+	@Autowired
+	private TweetDataConnection tweetRepository;
+
 
 	@RabbitListener(queues = "${workshop.rabbitmq.queue}")
 	public void receive(String message)
 	{
-//		log.info("message received");
-//		log.info("Received event in service email: {}", message);
-//
-//		ObjectMapper jsonObjectMapper = new ObjectMapper();
-//		BasicUser basicUser = null;
-//		try
-//		{
-//			basicUser = jsonObjectMapper.readValue(message, BasicUser.class);
-//		}
-//		catch (JsonProcessingException e)
-//		{
-//			e.printStackTrace();
-//			return;
-//		}
-//
-//		log.info("updating local user");
-//		tweetRepository.updateUser(basicUser);
-//
-//		log.info("done");
+		System.out.println("Received event in service email:" + message);
+
+		ObjectMapper jsonObjectMapper = new ObjectMapper();
+		BasicUser basicUser = null;
+		try
+		{
+			basicUser = jsonObjectMapper.readValue(message, BasicUser.class);
+		}
+		catch (JsonProcessingException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+
+		System.out.println("updating user");
+
+		boolean success = tweetRepository.updateUser(basicUser);
+
+		System.out.println("success: " + success);
 	}
 }
 

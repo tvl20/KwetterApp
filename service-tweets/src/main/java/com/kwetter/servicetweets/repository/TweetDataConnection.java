@@ -67,11 +67,16 @@ public class TweetDataConnection
 		return Collections.unmodifiableList(tweetList);
 	}
 
-	public void updateUser(BasicUser basicUser)
+	public boolean updateUser(BasicUser basicUser)
 	{
 		for (int i = 0; i < users.size(); i++)
 		{
-			if (users.get(i).getUserId() == basicUser.getUserId()) users.set(i, basicUser);
+			if (users.get(i).getUserId() == basicUser.getUserId())
+			{
+				users.set(i, basicUser);
+				return true;
+			}
 		}
+		return false;
 	}
 }

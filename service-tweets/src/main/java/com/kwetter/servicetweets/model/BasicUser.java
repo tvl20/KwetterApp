@@ -17,11 +17,20 @@ public class BasicUser
 		return userId;
 	}
 
+	public BasicUser() {}
+
 	public BasicUser(String username, int userId)
 	{
 		this.username = username;
 		this.userId = userId;
 	}
 
-	public BasicUser() {}
+	@Override
+	public String toString()
+	{
+		return "BasicUser{" +
+		       "username='" + username + '\'' +
+		       ", userId=" + userId +
+		       '}';
+	}
 }

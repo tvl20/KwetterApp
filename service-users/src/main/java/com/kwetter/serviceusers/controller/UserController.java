@@ -1,13 +1,13 @@
 package com.kwetter.serviceusers.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kwetter.serviceusers.model.BasicUser;
 import com.kwetter.serviceusers.model.User;
 import com.kwetter.serviceusers.repository.UserDataConnection;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.MessageProperties;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -65,13 +65,30 @@ public class UserController
 
 		if (!success) return false;
 
-		System.out.println("Convert and send obj: " + affectedUser.getBasicUser().toString());
-		rabbitTemplate.convertAndSend(affectedUser.getBasicUser());
+		BasicUser updatedUser = affectedUser.getBasicUser();
+
+		System.out.println("Creating json for: " + updatedUser.toString());
+		String json;
+		try
+		{
+			ObjectMapper objectmapper = new ObjectMapper();
+			json = objectmapper.writeValueAsString(updatedUser);
+
+			System.out.println("Constructed Json: \r\n" + json);
+		}
+		catch (JsonProcessingException e)
+		{
+			System.out.println("Error parsing JSON");
+			return false;
+		}
+
+		System.out.println("Creating message");
+		Message message = new Message(json.getBytes(), new MessageProperties());
+
+		System.out.println("Sending message");
+		rabbitTemplate.send(exchange, routingkey, message);
 
 		System.out.println("message sent");
-		success = true;
-
-		System.out.println("Message sent with success: " + success);
-		return success;
+		return true;
 	}
 }
