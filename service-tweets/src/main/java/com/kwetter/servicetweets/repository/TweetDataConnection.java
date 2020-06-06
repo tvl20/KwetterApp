@@ -79,4 +79,19 @@ public class TweetDataConnection
 		}
 		return false;
 	}
+
+	public void postTweet(int userid, Tweet tweet)
+	{
+		tweets.add(tweet);
+	}
+
+	public BasicUser getUserById(int userid)
+	{
+		for (BasicUser user : users)
+		{
+			if (user.getUserId() == userid) return user;
+		}
+
+		return null;
+	}
 }

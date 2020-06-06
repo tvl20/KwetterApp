@@ -4,11 +4,9 @@ import com.kwetter.servicetweets.model.BasicUser;
 import com.kwetter.servicetweets.model.Tweet;
 import com.kwetter.servicetweets.repository.TweetDataConnection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -48,5 +46,19 @@ public class TweetController
 	public String testConnection()
 	{
 		return "Success";
+	}
+
+	@PostMapping("/tweet")
+	public boolean postTweet(@RequestParam int userid, @RequestBody String content)
+	{
+		BasicUser user = tweetRepository.getUserById(userid);
+		if (user == null) return false;
+
+		Tweet tweet = new Tweet(
+				new Date(), content, user
+		);
+
+		tweetRepository.postTweet(userid, tweet);
+		return true;
 	}
 }
