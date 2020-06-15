@@ -1,24 +1,45 @@
 package com.kwetter.serviceusers.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "users")
 public class User {
-    private int userID;
-    private String name;
-    private String mentionHandle;
-    private String desc;
 
-    public int getUserID()
-    {
-        return userID;
-    }
+    @Id
+    @Column(columnDefinition = "VARCHAR(15)")
+    private String username = "";
+    private String mentionHandle = "";
+    private String desc = "";
 
-    public String getName()
-    {
-        return name;
-    }
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<User> following = new HashSet<>();
 
     public String getMentionHandle()
     {
         return mentionHandle;
+    }
+
+    public void setMentionHandle(String mentionHandle)
+    {
+        this.mentionHandle = mentionHandle;
+    }
+
+    public String getUsername()
+    {
+        return username;
+    }
+
+    public void setUsername(String name)
+    {
+        this.username = name;
     }
 
     public String getDesc()
@@ -26,23 +47,26 @@ public class User {
         return desc;
     }
 
-    public void setName(String name)
+    public void setDesc(String desc)
     {
-        this.name = name;
-    }
-
-    public User(int userID, String name, String mentionHandle, String desc) {
-        this.userID = userID;
-        this.name = name;
-        this.mentionHandle = mentionHandle;
         this.desc = desc;
     }
 
-    public User() {
+    public Set<User> getFollowing()
+    {
+        return following;
     }
 
-    public BasicUser getBasicUser()
+    public void setFollowing(Set<User> following)
     {
-        return new BasicUser(name, userID);
+        this.following = following;
+    }
+
+    public User() { }
+
+    public User(String username, String mentionHandle)
+    {
+        this.username = username;
+        this.mentionHandle = mentionHandle;
     }
 }

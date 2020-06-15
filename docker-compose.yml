@@ -8,20 +8,40 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-  service-tweets:
-    image: service-tweets:latest
-    hostname: service-tweets
-    restart: always
+  mysql-users:
+    image: mysql:5.6.26
+    hostname: mysql-users
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpss
+      - MYSQL_DATABASE=mysql-db-users
     ports:
-      - 8081:8081
-    depends_on:
-      - message-broker
+      - "3307:3306"
+
+  mysql-tweets:
+    image: mysql:5.6.26
+    hostname: mysql-tweets
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpss
+      - MYSQL_DATABASE=mysql-db-tweets
+    ports:
+      - "3306:3306"
 
   service-users:
-    image: service-users:latest
+    build: ./service-users
     hostname: service-users
     restart: always
     ports:
-      - 8082:8082
+      - "8082:8082"
     depends_on:
       - message-broker
+      - mysql-users
+
+  service-tweets:
+    build: ./service-tweets
+    hostname: service-tweets
+    restart: always
+    ports:
+      - "8081:8081"
+    depends_on:
+      - message-broker
+      - mysql-tweets

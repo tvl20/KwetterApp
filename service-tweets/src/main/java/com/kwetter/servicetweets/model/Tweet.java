@@ -1,11 +1,21 @@
 package com.kwetter.servicetweets.model;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 public class Tweet {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     private Date postDate;
     private String message;
-    private BasicUser poster;
+
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private UserEntity poster;
 
     public Date getPostDate()
     {
@@ -17,14 +27,14 @@ public class Tweet {
         return message;
     }
 
-    public BasicUser getPoster()
+    public UserEntity getPoster()
     {
         return poster;
     }
 
     public Tweet() {}
 
-    public Tweet(Date postDate, String message, BasicUser poster) {
+    public Tweet(Date postDate, String message, UserEntity poster) {
         this.postDate = postDate;
         this.message = message;
         this.poster = poster;
