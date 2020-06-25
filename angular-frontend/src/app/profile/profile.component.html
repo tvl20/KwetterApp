@@ -1,1 +1,22 @@
-<p>profile works!</p>
+<div class="container">
+    <b>Username: {{ user.username }} </b>
+    <p>Mention Handle {{ user.mentionHandle }} </p>
+    
+    <!-- follow button -->
+    <ng-template [ngIf]="isFollowing == 0">
+        <button (click)="followUser()">Follow user</button>
+    </ng-template>
+
+    <ng-template [ngIf]="isFollowing == 1">
+        <button (click)="followUser()">Unfollow user</button>
+    </ng-template>
+
+    <br>
+    <h1>Posts: </h1>
+    <ul>
+        <li *ngFor="let tweet of tweets">
+            <span> {{ tweet.message }} </span>
+            <span> {{ tweet.postDate }} </span>
+        </li>
+    </ul>
+</div>

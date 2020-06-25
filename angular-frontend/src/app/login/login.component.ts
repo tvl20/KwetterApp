@@ -15,7 +15,6 @@ export class LoginComponent implements OnInit
   loginForm: FormGroup;
   loading = false;
   submitted = false;
-  // returnUrl: string;
 
   // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
@@ -26,7 +25,7 @@ export class LoginComponent implements OnInit
     private router: Router
     ) { 
       // redirect to home if already logged in
-      if (this.auth.user) {
+      if (this.auth.userToken) {
         this.router.navigate(['/']);
       }
     }
@@ -53,13 +52,11 @@ export class LoginComponent implements OnInit
       .pipe(first())
       .subscribe(
         (data: HttpResponse<any>) => {
-          console.log(data);
           // this.router.navigate([this.returnUrl]);
           this.router.navigate(['/']);
         },
         error => {
           // this.alertService.error(error);
-          console.log(error)
           this.loading = false;
         });
   }

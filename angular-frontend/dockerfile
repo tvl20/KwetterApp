@@ -1,0 +1,7 @@
+FROM node:alpine AS build
+WORKDIR /workspace/app
+COPY . .
+RUN npm install && npm run build
+
+FROM nginx:alpine
+COPY --from=build /workspace/app/dist/angular-frontend /usr/share/nginx/html

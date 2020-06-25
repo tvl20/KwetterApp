@@ -1,98 +1,100 @@
 package com.kwetter.serviceusers.controller;
 
+import com.kwetter.serviceusers.model.UserEntity;
+import com.kwetter.serviceusers.model.UserStatistics;
+import com.kwetter.serviceusers.repository.UserDao;
+import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.security.Principal;
+import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class UserController
 {
+	@Autowired
+	private UserDao userDao;
 
-	@GetMapping("")
-	public String testConnection()
+	@GetMapping("/details")
+	@ResponseBody
+	public UserEntity getUserDetails(Principal principal)
 	{
-		return "Users: " + new Date().toString();
+		UserEntity user = userDao.findByUsername(principal.getName());
+		System.out.println("RETURNING LOGGED IN USER: " + user.toString());
+		return user;
 	}
 
+	@PostMapping("/details")
+	@ResponseBody
+	public UserEntity getUserDetails(@RequestBody String username)
+	{
+		UserEntity user = userDao.findByUsername(username);
+		System.out.println("RETURNING USER: " + user.toString());
+		return user;
+	}
 
-//	@Autowired
-//	private AmqpTemplate rabbitTemplate;
-//
-//	@Value("${workshop.rabbitmq.exchange}")
-//	private String exchange;
-//	@Value("${workshop.rabbitmq.routingkey}")
-//	private String routingkey;
-//
-//	@Autowired
-//	private UserDataConnection userDataRepository;
-//
-//	// DEBUG: TODO:REMOVE
-//	@GetMapping("")
-//	public List<User> getAllUsers()
-//	{
-//		return userDataRepository.getAllUsers();
-//	}
-//
-//	@GetMapping("/basicusermention")
-//	public BasicUser getBasicUserFromMention(@RequestParam String mention)
-//	{
-//		User user = userDataRepository.getUserFromMention(mention);
-//		return user != null ? user.getBasicUser() : null;
-//	}
-//
-//	@GetMapping("/fulluser")
-//	public User getUserProfile(@RequestParam int userId)
-//	{
-//		return userDataRepository.getUser(userId);
-//	}
-//
-//	@GetMapping("/following")
-//	public BasicUser[] getUserFollowing(@RequestParam int userId)
-//	{
-//		return userDataRepository.getFollowed(userId);
-//	}
-//
-//	@GetMapping("/userstats")
-//	public UserStats getUserStatistics(@RequestParam int userId)
-//	{
-//		return userDataRepository.getUserStatistics(userId);
-//	}
-//
-//	@PostMapping("/namechange")
-//	public boolean changeName(@RequestParam int userId, @RequestParam String name)
-//	{
-//		User affectedUser = userDataRepository.getUser(userId);
-//		affectedUser.setName(name);
-//
-//		boolean success = userDataRepository.updateUser(affectedUser);
-//
-//		if (!success) return false;
-//
-//		BasicUser updatedUser = affectedUser.getBasicUser();
-//
-//		System.out.println("Creating json for: " + updatedUser.toString());
-//		String json;
-//		try
-//		{
-//			ObjectMapper objectmapper = new ObjectMapper();
-//			json = objectmapper.writeValueAsString(updatedUser);
-//
-//			System.out.println("Constructed Json: \r\n" + json);
-//		}
-//		catch (JsonProcessingException e)
-//		{
-//			System.out.println("Error parsing JSON");
-//			return false;
-//		}
-//
-//		System.out.println("Creating message");
-//		Message message = new Message(json.getBytes(), new MessageProperties());
-//
-//		System.out.println("Sending message");
-//		rabbitTemplate.send(exchange, routingkey, message);
-//
-//		System.out.println("message sent");
-//		return true;
-//	}
+	@GetMapping("/stats")
+	@ResponseBody
+	public UserStatistics getUserStatistics(Principal principal)
+	{
+		UserEntity user = userDao.findByUsername(principal.getName());
+
+		UserStatistics stats = new UserStatistics();
+		stats.following = user.getFollowing().size();
+		stats.followers = userDao.countUsersByFollowingContains(user);
+
+		return stats;
+	}
+
+	@PostMapping("/stats")
+	@ResponseBody
+	public UserStatistics getUserStatistics(@RequestBody String username)
+	{
+		UserEntity user = userDao.findByUsername(username);
+
+		UserStatistics stats = new UserStatistics();
+		stats.following = user.getFollowing().size();
+		stats.followers = userDao.countUsersByFollowingContains(user);
+
+		return stats;
+	}
+
+	@GetMapping("/allusers")
+	@ResponseBody
+	public List<UserEntity> getAllUsers()
+	{
+		return userDao.findAll();
+	}
+
+	@PostMapping("/isfollowing")
+	@ResponseBody
+	public int isFollowingUser(Principal principal, @RequestBody String user)
+	{
+		UserEntity currentUser = userDao.findByUsername(principal.getName());
+		UserEntity followUser = userDao.findByUsername(user);
+		if (currentUser.equals(followUser)) return 2;
+
+		for (UserEntity userEntity : currentUser.getFollowing())
+		{
+			if (userEntity.equals(followUser)) return 1;
+		}
+
+		return 0;
+	}
+
+	@PostMapping("/follow")
+	public void followUser(Principal principal, @RequestBody String user)
+	{
+		System.out.println("-- HANDLING FOLLOW");
+		UserEntity currentUser = userDao.findByUsername(principal.getName());
+		UserEntity followUser = userDao.findByUsername(user);
+
+		currentUser.handleFollow(followUser);
+
+		userDao.saveAndFlush(currentUser);
+	}
 }

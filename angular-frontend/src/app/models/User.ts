@@ -1,4 +1,8 @@
 export class User {
-    name: string;
-    handle: string;
+    username: string = "";
+    password: string = "";
+    mentionHandle: string = "";
+    description: string = "";
+    following: User[];
+    access_token: string = "";
 }

@@ -1,15 +1,11 @@
 package com.kwetter.serviceusers.repository;
 
-import com.kwetter.serviceusers.model.User;
+import com.kwetter.serviceusers.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
-import java.util.Set;
-
-public interface UserDao extends JpaRepository<User, Long>
+public interface UserDao extends JpaRepository<UserEntity, Long>
 {
-	User findByUsername(String username);
+	UserEntity findByUsername(String username);
 
-	int countUsersByFollowingContains(String username);
+	int countUsersByFollowingContains(UserEntity username);
 }

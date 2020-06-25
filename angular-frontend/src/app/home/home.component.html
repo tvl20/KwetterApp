@@ -1,11 +1,43 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
-            thing
+        <div class="col-md">
+            <!-- Quick User Stats -->
+            <b>Statistics</b>
+            <p>Followers: {{ stats.followers }} users</p>
+            <p>Following: {{ stats.following }} users</p>
         </div>
-        <div class="col-md-6">
-            stuff
+        <div class="col-md">
+            <!-- Post Tweet -->
+            <app-send-tweet></app-send-tweet>
+        </div>
+    </div>
+
+    <!-- Tweet Timeline -->
+    <div class="row">
+        <div class="col-md">
+            <div class="text-center">
+                <b>Tweet timeline</b>
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let tweet of timeline">
+                    <b> {{ tweet.username.username }} </b>
+                    <p> {{ tweet.message }} </p>
+                    <p> {{ tweet.postDate }} </p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md">
+            <div class="text-center">
+                <b>All Registered Users</b>
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-action flex-column align-items-start" *ngFor="let user of users" (click)="onClickProfile(user)">
+                    <p> {{ user.username }} </p>
+                    <p> {{ user.mentionHandle}} </p>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

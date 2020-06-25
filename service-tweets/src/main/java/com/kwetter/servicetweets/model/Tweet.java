@@ -15,7 +15,7 @@ public class Tweet {
 
     @ManyToOne
     @JoinColumn(name = "username")
-    private UserEntity poster;
+    private UserEntity username;
 
     public Date getPostDate()
     {
@@ -27,16 +27,16 @@ public class Tweet {
         return message;
     }
 
-    public UserEntity getPoster()
+    public UserEntity getUsername()
     {
-        return poster;
+        return username;
     }
 
     public Tweet() {}
 
-    public Tweet(Date postDate, String message, UserEntity poster) {
+    public Tweet(Date postDate, String message, UserEntity username) {
         this.postDate = postDate;
         this.message = message;
-        this.poster = poster;
+        this.username = username;
     }
 }

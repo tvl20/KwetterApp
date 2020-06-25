@@ -1,14 +1,20 @@
 package com.kwetter.servicetweets.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kwetter.servicetweets.model.*;
 import com.kwetter.servicetweets.repository.TweetDao;
 import com.kwetter.servicetweets.repository.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class TweetController
@@ -19,72 +25,48 @@ public class TweetController
 	@Autowired
 	private UserDao userDao;
 
-	private UserEntity ue = new UserEntity("testuser", "@testuser");
-
-	@GetMapping("")
-	private void addDebugTweet()
+	@PostMapping("/timeline")
+	@ResponseBody
+	public List<Tweet> getTimelineWith(@RequestBody String wrapper)
 	{
-		List<Tweet> all = tweetDao.findAll();
-		if (all.size() < 1)
+		TimelineWrappingObject nameObj = null;
+		try
 		{
-			userDao.saveAndFlush(ue);
-
-			Tweet t = new Tweet(new Date(), "Testing sux", ue);
-			tweetDao.saveAndFlush(t);
+			ObjectMapper mapper = new ObjectMapper();
+			nameObj = mapper.readValue(wrapper, TimelineWrappingObject.class);
 		}
+		catch (JsonProcessingException e)
+		{
+			e.printStackTrace();
+		}
+
+		if (nameObj != null)
+		{
+			return tweetDao.getTimeline(nameObj.usernames);
+		}
+		else return null;
 	}
 
-	@GetMapping("/all")
-	private List<Tweet> getAllTweets()
+	@GetMapping("/posts")
+	@ResponseBody
+	public List<Tweet> getPostsFrom(Principal principal)
 	{
-		return tweetDao.findAll();
+		return tweetDao.getPosts(principal.getName());
 	}
 
-	@GetMapping("/home/")
-	private List<Tweet> getAllTweetsFrom()
+	@PostMapping("/posts")
+	@ResponseBody
+	public List<Tweet> getPostsFrom(@RequestBody String username)
 	{
-		return tweetDao.findByPoster(ue);
+		return tweetDao.getPosts(username);
 	}
 
+	@PostMapping("/tweet")
+	public void postTweet( Principal principal, @RequestBody String message)
+	{
+		Tweet tweet = new Tweet(new Date(), message, userDao.findByUsername(principal.getName()));
 
-	// DEBUG: TODO:REMOVE
-//	@Autowired
-//	private TweetDataConnection tweetRepository;
-
-//	@GetMapping("")
-//	public List<BasicUser> getAllUsers()
-//	{
-//		return tweetRepository.getAllUsers();
-//	}
-//
-//	@GetMapping("/alltweets")
-//	public List<Tweet> getAllTweets()
-//	{
-//		return tweetRepository.getAllTweets();
-//	}
-//
-//	@GetMapping("/lastfromid")
-//	public FrontendTweet[] getLastTweetsFrom(@RequestParam int userid)
-//	{
-//		return tweetRepository.getLastTweetsFromId(userid);
-//	}
-//
-//	@GetMapping("/test")
-//	public String testConnection()
-//	{
-//		return "Success";
-//	}
-//
-//	@PostMapping("/tweet")
-//	public boolean postTweet(@RequestParam int userid, @RequestBody String content)
-//	{
-//		if (tweetRepository.getBasicUserById(userid) == null) return false;
-//
-//		Tweet tweet = new Tweet(
-//				new Date(), content, userid
-//		);
-//
-//		tweetRepository.postTweet(userid, tweet);
-//		return true;
-//	}
+		System.out.println("Posting tweet: " + tweet.getPostDate().toString() + " - " + tweet.getMessage());
+		tweetDao.saveAndFlush(tweet);
+	}
 }
