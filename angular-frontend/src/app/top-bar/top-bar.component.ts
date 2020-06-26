@@ -17,9 +17,7 @@ export class TopBarComponent implements OnInit {
     private userService: UsersService,
     private router: Router
     ) 
-  { }
-
-  ngOnInit(): void {
+  { 
     if (this.auth.isLoggedIn())
     {
       this.userService.getUserData().subscribe( 
@@ -27,6 +25,9 @@ export class TopBarComponent implements OnInit {
           this.user = data as User;
       });
     }
+  }
+
+  ngOnInit(): void {
   }
 
   loadProfile(user: User)
