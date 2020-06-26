@@ -27,6 +27,12 @@ import java.util.List;
 @RequestMapping("/auth")
 public class AuthController
 {
+	@GetMapping("")
+	public String testConnection()
+	{
+		return "success";
+	}
+
 	@Value("${server.port}")
 	private String localPortNumber;
 

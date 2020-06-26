@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-db
+spec:
+  selector:
+    matchLabels:
+      app: mysql-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql-db
+    spec:
+      containers:
+        - image: mysql:8.0.20
+          name: mysql-db
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: 'rootpss'
+          ports:
+            - containerPort: 3306
+              name: mysql-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-db
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql-db

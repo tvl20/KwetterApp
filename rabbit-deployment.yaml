@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-broker
+  template:
+    metadata:
+      labels:
+        app: message-broker
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+        - name: message-broker
+          image: rabbitmq:3.8-management
+          ports:
+            - containerPort: 5672
+              name: message-broker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: message-broker
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 5672
+  selector:
+    app: message-broker

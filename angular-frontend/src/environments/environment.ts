@@ -3,10 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  tweetUrl: 'http://localhost:8081',
-  userUrl: 'http://localhost:8082',
-  authUrl: 'http://localhost:8083'
+  production: true,
+  tweetUrl: 'http://tweets:8081',
+  userUrl: 'http://users:8082',
+  authUrl: 'http://auth:8083'
 };
 
 /*

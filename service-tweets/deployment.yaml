@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tweets
+spec:
+  selector:
+    matchLabels:
+      app: tweets
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tweets
+    spec:
+      containers:
+        - name: tweets
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql-db/tweets?createDatabaseIfNotExist=true"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: rootpss
+
+          image: 'teunkwettercr.azurecr.io/k-tweets:v1'
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tweets
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8081
+  selector:
+    app: tweets

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kwetter
+spec:
+  selector:
+    matchLabels:
+      app: kwetter
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kwetter
+    spec:
+      containers:
+        - name: kwetter
+          image: 'teunkwettercr.azurecr.io/k-kwetter:v1'
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kwetter
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+  selector:
+    app: kwetter
