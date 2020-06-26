@@ -16,7 +16,7 @@ spec:
         - name: users
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:mysql://mysql-db/users?createDatabaseIfNotExist=true"
+              value: "jdbc:mysql://mysql-db:3306/users?createDatabaseIfNotExist=true"
             - name: SPRING_DATASOURCE_USERNAME
               value: root
             - name: SPRING_DATASOURCE_PASSWORD

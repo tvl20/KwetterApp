@@ -16,7 +16,7 @@ spec:
         - name: auth
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:mysql://mysql-db/auth?createDatabaseIfNotExist=true"
+              value: "jdbc:mysql://mysql-db:3306/auth?createDatabaseIfNotExist=true"
             - name: SPRING_DATASOURCE_USERNAME
               value: root
             - name: SPRING_DATASOURCE_PASSWORD
