@@ -10,14 +10,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./top-bar.component.css']
 })
 export class TopBarComponent implements OnInit {
-  user: User;
+  user: User = null;
 
   constructor(
     public auth: AuthService,
     private userService: UsersService,
     private router: Router
     ) 
-  { 
+  { }
+
+  ngOnInit(): void {
     if (this.auth.isLoggedIn())
     {
       this.userService.getUserData().subscribe( 
@@ -27,10 +29,25 @@ export class TopBarComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  loadProfile(user: User)
+  {
+    // for some reason this.user remains null from time to time, workaround:
+    // todo: fix
+    if (user == null || user.username == "")
+    {
+      this.userService.getUserData().subscribe( 
+        data => {
+          this.user = data as User;
+          this.refresh(this.user);
+      });
+    }
+    else
+    {
+      this.refresh(user);
+    }
   }
 
-  loadProfile(user: User)
+  private refresh(user: User)
   {
     this.router.routeReuseStrategy.shouldReuseRoute = () =>{return false};
     this.router.onSameUrlNavigation = "reload";
