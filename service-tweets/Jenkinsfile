@@ -48,7 +48,7 @@ pipeline {
 		}
 		stage('kubetcl set') {
         			steps {
-        				sh 'kubectl set image deployment/k-tweets k-tweets=teunkwettercr.azurecr.io/k-tweets:kube${BUILD_NUMBER} --kubeconfig /home/jenkins/.kube/config'
+        				sh 'kubectl set image deployment/tweets k-tweets=teunkwettercr.azurecr.io/k-tweets:kube${BUILD_NUMBER} --kubeconfig /home/jenkins/.kube/config'
         			}
         		}
     }
