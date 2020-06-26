@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./top-bar.component.css']
 })
 export class TopBarComponent implements OnInit {
-  user: User = new User();
+  user: User;
 
   constructor(
     public auth: AuthService,
