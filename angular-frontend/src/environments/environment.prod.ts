@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  tweetUrl: 'http://10.0.198.18:8081',
-  userUrl: 'http://10.0.206.119:8082',
-  authUrl: 'http://10.0.129.79:8083'
+  tweetUrl: 'http://51.105.122.155:8081',
+  userUrl: 'http://51.124.128.212:8082',
+  authUrl: 'http://20.50.15.51:8083'
 };
