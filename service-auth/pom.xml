@@ -16,10 +16,10 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<sonar.projectKey>tvl20_KwetterApp</sonar.projectKey>
+		<sonar.projectKey>service-auth</sonar.projectKey>
 		<sonar.organization>tvl20</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-		<sonar.login>260685d2d31a8d83293ee35006bb7a8be74a1faa</sonar.login>
+		<sonar.login>9dc427b5d5946f3305905821e91aadd8da10408b</sonar.login>
 	</properties>
 
 	<dependencies>
